@@ -25,8 +25,8 @@ export type ExtractConfigResult =
  * #+ result-plot:
  * #+   type: petrimaps
  * #+   layers:
- * #+     - geomfield: geometry
- * #+       weightfield: population
+ * #+     - geomfield: ?geometry
+ * #+       weightfield: ?population
  * #+       style: heatmap
  * ```
  *

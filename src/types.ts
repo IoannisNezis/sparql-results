@@ -44,17 +44,17 @@ export interface PetrimapsRenderConfig {
 
 /** One rendered layer; the keys match petrimaps' layer objects. */
 export interface PetrimapsLayer {
-  /** Query variable (without `?`) holding the WKT geometry. */
+  /** Query variable (with leading `?`, e.g. `?geom`) holding the WKT geometry. */
   geomfield: string;
   /** Stable layer id; petrimaps auto-generates one if omitted. */
   id?: string;
   /** Human-readable layer name shown in the UI; defaults to `geomfield`. */
   name?: string;
-  /** Query variable holding a numeric value used to weight/color objects. */
+  /** Query variable (with leading `?`) holding a numeric value used to weight/color objects. */
   weightfield?: string;
-  /** Query variable holding the raster-metadata subject. */
+  /** Query variable (with leading `?`) holding the raster-metadata subject. */
   rasterfield?: string;
-  /** Query variable used to toggle/group objects in the UI. */
+  /** Query variable (with leading `?`) used to toggle/group objects in the UI. */
   toggle?: string;
   /** Raster cell width in web-mercator pseudometers (petrimaps default: 10). */
   rasterw?: number;
