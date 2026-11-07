@@ -53,7 +53,7 @@ export interface PetrimapsLayer {
   id?: string;
   /** Human-readable layer name shown in the UI; defaults to `geomfield`. */
   name?: string;
-  /** Query variable (with leading `?`) holding a numeric value used to weight/color objects. */
+  /** Query variable (with leading `?`) holding a numeric weight for `heatmap` and `raster` styles. */
   weightfield?: string;
   /** Query variable (with leading `?`) holding the raster-metadata subject. */
   rasterfield?: string;
