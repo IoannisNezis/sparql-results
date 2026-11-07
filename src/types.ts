@@ -33,6 +33,9 @@ export interface LinePlotRenderConfig {
 /** Rendering style of a petrimaps layer. */
 export type PetrimapsStyle = "auto" | "objects" | "heatmap" | "raster";
 
+/** How a petrimaps layer is switched in the layer control. */
+export type PetrimapsToggle = "checkbox" | "radio";
+
 /**
  * Map rendering via qlever-petrimaps. Mirrors the per-query config of the
  * petrimaps `/query?cfg=` endpoint: one entry in `layers` per rendered layer.
@@ -54,8 +57,15 @@ export interface PetrimapsLayer {
   weightfield?: string;
   /** Query variable (with leading `?`) holding the raster-metadata subject. */
   rasterfield?: string;
-  /** Query variable (with leading `?`) used to toggle/group objects in the UI. */
-  toggle?: string;
+  /**
+   * How the layer is switched in the UI: `checkbox` layers can be turned on
+   * and off independently, `radio` layers (default) are mutually exclusive.
+   */
+  toggle?: PetrimapsToggle;
+  /** Whether a `checkbox` layer starts switched on (petrimaps default: true). */
+  enabled?: boolean;
+  /** Layer-switcher tab the layer is listed under; ungrouped layers share a default tab. */
+  group?: string;
   /** Raster cell width in web-mercator pseudometers (petrimaps default: 10). */
   rasterw?: number;
   /** Raster cell height in web-mercator pseudometers (petrimaps default: 10). */
@@ -66,6 +76,14 @@ export interface PetrimapsLayer {
   colorscheme?: string;
   /** Rendering style (petrimaps default: "auto"). */
   style?: PetrimapsStyle;
+  /** Line width of rendered objects (petrimaps default: 3). */
+  linew?: number;
+  /** Fill opacity of rendered polygons, 0–1 (petrimaps default: 0.5). */
+  fillopacity?: number;
+  /** Opacity of rendered lines, 0–1 (petrimaps default: 1). */
+  lineopacity?: number;
+  /** Radius of rendered points (petrimaps default: 3). */
+  pointradius?: number;
 }
 
 export interface SPARQLResults {

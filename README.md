@@ -188,7 +188,9 @@ SELECT ?place ?geometry ?population WHERE {
 }
 ```
 
-Several layers, each with its own geometry variable and style:
+Several layers, each with its own geometry variable and style. `group` puts
+layers under a shared tab in the layer switcher; a `checkbox` layer can be
+switched on and off on its own, and `enabled: false` starts it switched off:
 
 ```sparql
 #+ result-plot:
@@ -196,15 +198,21 @@ Several layers, each with its own geometry variable and style:
 #+   layers:
 #+     - id: stations
 #+       name: Railway stations
+#+       group: Railways
 #+       geomfield: ?station_geom
 #+       style: objects
 #+       color: "3388ff"
+#+       pointradius: 5
 #+     - id: lines
 #+       name: Railway lines
+#+       group: Railways
 #+       geomfield: ?line_geom
-#+       toggle: ?usage
+#+       toggle: checkbox
+#+       enabled: false
 #+       style: objects
 #+       color: "636363"
+#+       linew: 2
+#+       lineopacity: 0.8
 ```
 
 | Field         | Type    | Description                                                                 |
@@ -214,20 +222,26 @@ Several layers, each with its own geometry variable and style:
 | `name`        | string  | Layer name shown in the UI; defaults to `geomfield`.                        |
 | `weightfield` | string  | Variable holding a numeric weight used to color objects, heatmaps, rasters. |
 | `rasterfield` | string  | Variable holding the raster-metadata subject.                               |
-| `toggle`      | string  | Variable used to toggle/group objects in the UI.                            |
+| `toggle`      | string  | `checkbox` (switched on/off on its own) or `radio` (default, exclusive).    |
+| `enabled`     | boolean | Whether a `checkbox` layer starts switched on (default `true`).             |
+| `group`       | string  | Layer-switcher tab to list the layer under; ungrouped layers share one.     |
 | `rasterw`     | integer | Raster cell width in web-mercator pseudometers (default `10`).              |
 | `rasterh`     | integer | Raster cell height in web-mercator pseudometers (default `10`).             |
 | `color`       | string  | 6-digit hex color without `#` (default `"3388ff"`).                         |
 | `colorscheme` | string  | Heatmap/raster color scheme (default `spectralexp`).                        |
 | `style`       | string  | `auto` (default), `objects`, `heatmap` or `raster`.                         |
+| `linew`       | number  | Line width of rendered objects (default `3`).                               |
+| `fillopacity` | number  | Polygon fill opacity, `0`–`1` (default `0.5`).                              |
+| `lineopacity` | number  | Line opacity, `0`–`1` (default `1`).                                        |
+| `pointradius` | number  | Radius of rendered points (default `3`).                                    |
 
-Variable fields (`geomfield`, `weightfield`, `rasterfield`, `toggle`) take the
+Variable fields (`geomfield`, `weightfield`, `rasterfield`) take the
 variable name with its leading `?`, e.g. `?geometry`.
 
 Quote `color` values: an all-digit hex like `"000000"` would otherwise parse as
 a YAML number. Available color schemes are `spectral`, `RdYlGn`, `RdYlBu`,
 `RdGy`, `YlOrRd`, `Blues`, `Greens`, `Greys`, `Oranges` and `Reds`, each also
-with an `exp` suffix (e.g. `Bluesexp`).
+with an `exp` suffix (e.g. `Bluesexp`), plus `w2b` and `b2w` for heatmaps.
 
 ## Development
 

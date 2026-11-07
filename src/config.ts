@@ -4,6 +4,7 @@ import type {
   PetrimapsLayer,
   PetrimapsRenderConfig,
   PetrimapsStyle,
+  PetrimapsToggle,
   RenderConfig,
   TableRenderConfig,
 } from "./types";
@@ -180,19 +181,25 @@ const PETRIMAPS_STYLES: PetrimapsStyle[] = [
   "raster",
 ];
 
-/** Color schemes accepted by petrimaps, each also available with an `exp` suffix. */
+const PETRIMAPS_TOGGLES: PetrimapsToggle[] = ["checkbox", "radio"];
+
+/** Color schemes accepted by petrimaps; all but `w2b`/`b2w` also come with an `exp` suffix. */
 const PETRIMAPS_COLORSCHEMES = [
-  "spectral",
-  "RdYlGn",
-  "RdYlBu",
-  "RdGy",
-  "YlOrRd",
-  "Blues",
-  "Greens",
-  "Greys",
-  "Oranges",
-  "Reds",
-].flatMap((scheme) => [scheme, `${scheme}exp`]);
+  ...[
+    "spectral",
+    "RdYlGn",
+    "RdYlBu",
+    "RdGy",
+    "YlOrRd",
+    "Blues",
+    "Greens",
+    "Greys",
+    "Oranges",
+    "Reds",
+  ].flatMap((scheme) => [scheme, `${scheme}exp`]),
+  "w2b",
+  "b2w",
+];
 
 function validatePetrimaps(raw: RawMapping): ExtractConfigResult {
   const unknown = rejectUnknownFields(raw, ["type", "layers"], "petrimaps");
@@ -226,11 +233,17 @@ function validateLayer(entry: unknown): PetrimapsLayer | string {
       "weightfield",
       "rasterfield",
       "toggle",
+      "enabled",
+      "group",
       "rasterw",
       "rasterh",
       "color",
       "colorscheme",
       "style",
+      "linew",
+      "fillopacity",
+      "lineopacity",
+      "pointradius",
     ],
     "layer",
   );
@@ -247,12 +260,45 @@ function validateLayer(entry: unknown): PetrimapsLayer | string {
     "name",
     "weightfield",
     "rasterfield",
-    "toggle",
+    "group",
   ] as const) {
     const value = entry[field];
     if (value === undefined) continue;
     if (typeof value !== "string" || value === "") {
       return `"${field}" must be a non-empty string`;
+    }
+    layer[field] = value;
+  }
+
+  if (entry.toggle !== undefined) {
+    const toggle = PETRIMAPS_TOGGLES.find((t) => t === entry.toggle);
+    if (toggle === undefined) {
+      return '"toggle" must be "checkbox" or "radio"';
+    }
+    layer.toggle = toggle;
+  }
+
+  if (entry.enabled !== undefined) {
+    if (typeof entry.enabled !== "boolean") {
+      return '"enabled" must be true or false';
+    }
+    layer.enabled = entry.enabled;
+  }
+
+  for (const field of ["linew", "pointradius"] as const) {
+    const value = entry[field];
+    if (value === undefined) continue;
+    if (typeof value !== "number" || !(value >= 0)) {
+      return `"${field}" must be a non-negative number`;
+    }
+    layer[field] = value;
+  }
+
+  for (const field of ["fillopacity", "lineopacity"] as const) {
+    const value = entry[field];
+    if (value === undefined) continue;
+    if (typeof value !== "number" || !(value >= 0 && value <= 1)) {
+      return `"${field}" must be a number between 0 and 1`;
     }
     layer[field] = value;
   }
