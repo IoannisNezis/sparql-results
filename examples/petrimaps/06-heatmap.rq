@@ -1,0 +1,16 @@
+# A plain heatmap at every zoom level: `style: heatmap` plus a `colorscheme`.
+# Without a `weightfield`, every object counts once (pure density).
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+#+       name: Railway stations
+#+       style: heatmap
+#+       colorscheme: Bluesexp
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?geometry WHERE {
+  ?osm_id osmkey:railway "station" ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+}

@@ -1,0 +1,15 @@
+# Minimal config: only `geomfield` is required.
+# Everything else falls back to the petrimaps defaults: style `auto`
+# (heatmap when zoomed out, individual objects when zoomed in),
+# color "3388ff", colorscheme `spectralexp`, layer name = "?geometry".
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?geometry WHERE {
+  ?osm_id osmkey:amenity "drinking_water" ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+}

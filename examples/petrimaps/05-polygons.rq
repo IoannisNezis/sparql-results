@@ -1,0 +1,20 @@
+# Polygons as objects: `fillopacity` (default 0.5) for the area,
+# `linew` and `lineopacity` for the outline.
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+#+       name: National parks
+#+       style: objects
+#+       color: "238b45"
+#+       fillopacity: 0.2
+#+       linew: 1
+#+       lineopacity: 0.9
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?name ?geometry WHERE {
+  ?osm_id osmkey:boundary "national_park" ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+  OPTIONAL { ?osm_id osmkey:name ?name }
+}

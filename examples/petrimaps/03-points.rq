@@ -1,0 +1,16 @@
+# Points as objects: a fixed `color` and a larger `pointradius` (default 3).
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+#+       name: Lighthouses
+#+       style: objects
+#+       color: "e31a1c"
+#+       pointradius: 6
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?geometry WHERE {
+  ?osm_id osmkey:man_made "lighthouse" ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+}

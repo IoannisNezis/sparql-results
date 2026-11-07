@@ -1,0 +1,24 @@
+# A weighted heatmap: `weightfield` names a numeric variable, so a city
+# of 10 million glows far brighter than a city of 50 000.
+# The weight must be a real number in QLever, hence the xsd:integer cast
+# (OSM stores population as a plain string).
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+#+       weightfield: ?population
+#+       name: Cities by population
+#+       style: heatmap
+#+       colorscheme: YlOrRd
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?osm_id ?name ?population ?geometry WHERE {
+  ?osm_id osmkey:place "city" ;
+          osmkey:population ?pop ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+  OPTIONAL { ?osm_id osmkey:name ?name }
+  BIND(xsd:integer(?pop) AS ?population)
+  FILTER(BOUND(?population))
+}

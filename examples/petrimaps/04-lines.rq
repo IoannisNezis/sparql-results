@@ -1,0 +1,21 @@
+# Lines as objects: `linew` (default 3) and `lineopacity` (default 1).
+# Semi-transparent lines make busy routes visible where they overlap.
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+#+       name: Ferry routes
+#+       style: objects
+#+       color: "0868ac"
+#+       linew: 2
+#+       lineopacity: 0.6
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osm: <https://www.openstreetmap.org/>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?osm_id ?geometry WHERE {
+  ?osm_id osmkey:route "ferry" ;
+          rdf:type osm:way ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+}

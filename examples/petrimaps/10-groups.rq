@@ -1,0 +1,85 @@
+# Groups: every distinct `group` becomes its own tab in the layer switcher,
+# with its own radio set and its own checkboxes. Layers without a `group`
+# land in the default "Layers" tab. `id` gives a layer a stable identifier
+# (otherwise petrimaps generates one).
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     # --- Transport tab ------------------------------------------------
+#+     - id: airports
+#+       group: Transport
+#+       name: Airports (IATA)
+#+       geomfield: ?airport
+#+       style: objects
+#+       color: "6a51a3"
+#+       pointradius: 4
+#+       fillopacity: 0.4
+#+       linew: 1
+#+     - id: stations-heat
+#+       group: Transport
+#+       name: Railway station density
+#+       geomfield: ?station
+#+       style: heatmap
+#+       colorscheme: Greysexp
+#+     - id: ferries
+#+       group: Transport
+#+       name: Ferry routes
+#+       geomfield: ?ferry
+#+       toggle: checkbox
+#+       style: objects
+#+       color: "0868ac"
+#+       linew: 1.5
+#+       lineopacity: 0.5
+#+     # --- Nature tab ---------------------------------------------------
+#+     - id: parks
+#+       group: Nature
+#+       name: National parks
+#+       geomfield: ?park
+#+       style: objects
+#+       color: "238b45"
+#+       fillopacity: 0.25
+#+       linew: 1
+#+     - id: volcanoes
+#+       group: Nature
+#+       name: Volcanoes
+#+       geomfield: ?volcano
+#+       toggle: checkbox
+#+       enabled: false
+#+       style: objects
+#+       color: "bd0026"
+#+       pointradius: 4
+#+     # --- no group: default "Layers" tab -------------------------------
+#+     - id: lighthouses
+#+       name: Lighthouses
+#+       geomfield: ?lighthouse
+#+       style: auto
+#+       color: "e31a1c"
+#+       colorscheme: Redsexp
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osm: <https://www.openstreetmap.org/>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT ?osm_id ?airport ?station ?ferry ?park ?volcano ?lighthouse WHERE {
+  {
+    ?osm_id osmkey:aeroway "aerodrome" ;
+            osmkey:iata ?iata ;
+            geo:hasGeometry/geo:asWKT ?airport .
+  } UNION {
+    ?osm_id osmkey:railway "station" ;
+            geo:hasGeometry/geo:asWKT ?station .
+  } UNION {
+    ?osm_id osmkey:route "ferry" ;
+            rdf:type osm:way ;
+            geo:hasGeometry/geo:asWKT ?ferry .
+  } UNION {
+    ?osm_id osmkey:boundary "national_park" ;
+            geo:hasGeometry/geo:asWKT ?park .
+  } UNION {
+    ?osm_id osmkey:natural "volcano" ;
+            geo:hasGeometry/geo:asWKT ?volcano .
+  } UNION {
+    ?osm_id osmkey:man_made "lighthouse" ;
+            geo:hasGeometry/geo:asWKT ?lighthouse .
+  }
+}

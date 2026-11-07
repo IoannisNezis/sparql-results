@@ -1,0 +1,50 @@
+# Radio vs. checkbox layers.
+# - `toggle: radio` (the default): mutually exclusive base views. Here the
+#   same volcanoes, once as red objects and once as a heatmap.
+# - `toggle: checkbox`: overlays that are switched on and off independently,
+#   on top of whichever radio layer is active. `enabled: false` makes an
+#   overlay start switched off.
+# Each layer reads its own geometry variable; UNION leaves the others unbound.
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?volcano
+#+       name: Volcanoes (objects)
+#+       toggle: radio
+#+       style: objects
+#+       color: "bd0026"
+#+       pointradius: 5
+#+     - geomfield: ?volcano
+#+       name: Volcanoes (heatmap)
+#+       toggle: radio
+#+       style: heatmap
+#+       colorscheme: YlOrRdexp
+#+     - geomfield: ?glacier
+#+       name: Glaciers
+#+       toggle: checkbox
+#+       style: objects
+#+       color: "6baed6"
+#+       fillopacity: 0.7
+#+       linew: 0
+#+     - geomfield: ?cable_car
+#+       name: Cable cars
+#+       toggle: checkbox
+#+       enabled: false
+#+       style: objects
+#+       color: "252525"
+#+       linew: 2
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?volcano ?glacier ?cable_car WHERE {
+  {
+    ?osm_id osmkey:natural "volcano" ;
+            geo:hasGeometry/geo:asWKT ?volcano .
+  } UNION {
+    ?osm_id osmkey:natural "glacier" ;
+            geo:hasGeometry/geo:asWKT ?glacier .
+  } UNION {
+    ?osm_id osmkey:aerialway "cable_car" ;
+            geo:hasGeometry/geo:asWKT ?cable_car .
+  }
+}

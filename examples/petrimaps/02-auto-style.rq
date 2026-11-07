@@ -1,0 +1,18 @@
+# `style: auto` uses BOTH `colorscheme` (for the zoomed-out heatmap) and
+# `color` (for the objects drawn once you zoom in far enough).
+# Zoom into a city to see the switch from heatmap to brown dots.
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - geomfield: ?geometry
+#+       name: Cafés
+#+       style: auto
+#+       colorscheme: Oranges
+#+       color: "8c510a"
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?geometry WHERE {
+  ?osm_id osmkey:amenity "cafe" ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+}

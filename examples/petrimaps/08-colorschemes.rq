@@ -1,0 +1,29 @@
+# Color scheme gallery: several layers over the SAME geometry variable,
+# each with a different `colorscheme`. Layers are radio layers by default,
+# so the layer switcher flips between them — one visible at a time.
+# Compare a scheme with its `exp` variant (exponential scale: sparse areas
+# stay visible next to dense ones), and the heatmap-only `w2b` / `b2w`.
+#
+#+ result-plot:
+#+   type: petrimaps
+#+   layers:
+#+     - { geomfield: ?geometry, style: heatmap, name: spectral,    colorscheme: spectral }
+#+     - { geomfield: ?geometry, style: heatmap, name: spectralexp, colorscheme: spectralexp }
+#+     - { geomfield: ?geometry, style: heatmap, name: RdYlGn,      colorscheme: RdYlGn }
+#+     - { geomfield: ?geometry, style: heatmap, name: RdYlBu,      colorscheme: RdYlBu }
+#+     - { geomfield: ?geometry, style: heatmap, name: RdGy,        colorscheme: RdGy }
+#+     - { geomfield: ?geometry, style: heatmap, name: YlOrRd,      colorscheme: YlOrRd }
+#+     - { geomfield: ?geometry, style: heatmap, name: YlOrRdexp,   colorscheme: YlOrRdexp }
+#+     - { geomfield: ?geometry, style: heatmap, name: Blues,       colorscheme: Blues }
+#+     - { geomfield: ?geometry, style: heatmap, name: Greens,      colorscheme: Greens }
+#+     - { geomfield: ?geometry, style: heatmap, name: Greys,       colorscheme: Greys }
+#+     - { geomfield: ?geometry, style: heatmap, name: Oranges,     colorscheme: Oranges }
+#+     - { geomfield: ?geometry, style: heatmap, name: Reds,        colorscheme: Reds }
+#+     - { geomfield: ?geometry, style: heatmap, name: w2b,         colorscheme: w2b }
+#+     - { geomfield: ?geometry, style: heatmap, name: b2w,         colorscheme: b2w }
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+SELECT ?osm_id ?geometry WHERE {
+  ?osm_id osmkey:amenity "cafe" ;
+          geo:hasGeometry/geo:asWKT ?geometry .
+}
